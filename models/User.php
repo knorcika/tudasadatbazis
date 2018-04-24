@@ -90,4 +90,15 @@ class User extends DB {
     return ($this->isLoggedIn() && $_SESSION["login"]["role"] === "admin");
   }
 
+  /**
+   * Visszaadja a user jogosultságait
+   * @return array
+   */
+  public function getRoles() {
+    global $constants;
+    $roles = array($constants["ROLE_VISITOR"]);
+    //TODO: check and add other roles
+    return $roles;
+  }
+
 }
