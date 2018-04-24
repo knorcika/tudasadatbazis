@@ -17,7 +17,9 @@ class DB {
   }
 
   public function __destruct() {
-    oci_close($this->connection);
+    if ($this->connection) {
+      oci_close($this->connection);
+    }
   }
 
   public function query($sql) {
