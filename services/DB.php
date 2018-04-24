@@ -1,0 +1,48 @@
+<?php
+include BASE_DIR . "/config/database.php";
+
+class DB {
+  private $connection;
+  private $result;
+
+  public function __construct() {
+    global $dbConfig;
+    $tns = "(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = " . $dbConfig["DB_HOST"] . ")(PORT = " . $dbConfig["DB_PORT"] . ")))(CONNECT_DATA =(SID = " . $dbConfig["DB_SID"] . ")))";
+
+    $this->connection = oci_connect($dbConfig["DB_USERNAME"], $dbConfig["DB_PASSWORD"], $tns, 'UTF8');
+    if (!$this->connection) {
+      echo "Connection to database failed!";
+      die();
+    }
+  }
+
+  public function __destruct() {
+    oci_close($this->connection);
+  }
+
+  public function query($sql) {
+    try {
+      $this->result = oci_parse($this->connection, $sql);
+      oci_execute($this->result);
+    } catch (Exception $e) {
+      echo $e["message"];
+    }
+    return $this;
+  }
+
+  public function getResult() {
+    return $this->result;
+  }
+
+  public function getFetchedResult() {
+    $arr = Array();
+    while ($row = oci_fetch_array($this->result, OCI_ASSOC + OCI_RETURN_NULLS)) {
+      $arrRow = Array();
+      foreach ($row as $key => $val) {
+        $arrRow[$key] = $val;
+      }
+      array_push($arr, $arrRow);
+    }
+    return $arr;
+  }
+}
