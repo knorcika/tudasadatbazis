@@ -5,15 +5,17 @@ require_once BASE_DIR . "/services/replaceValues.php";
 class Menu {
   private $page = "";
   private $user;
+  private $lang;
 
   /**
    * Menu constructor.
    * @param $page
    * @param $user
    */
-  public function __construct($page, $user) {
+  public function __construct($page, $user, $lang) {
     $this->page = $page;
     $this->user = $user;
+    $this->lang = $lang;
   }
 
   /**
@@ -46,7 +48,9 @@ class Menu {
       if ($menuPoint["page"] === $this->page) {
         $menuPoint["classes"] .= " active ";
       }
+      //TODO: submenus
       if ($shouldAdd) {
+        $menuPoint["href"] .= "&lang=" . $this->lang;
         $menu = replaceValues($view, $menuPoint);
       }
       $menus .= $menu . PHP_EOL;
