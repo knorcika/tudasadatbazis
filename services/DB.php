@@ -41,7 +41,7 @@ class DB {
     while ($row = oci_fetch_array($this->result, OCI_ASSOC + OCI_RETURN_NULLS)) {
       $arrRow = Array();
       foreach ($row as $key => $val) {
-        $arrRow[$key] = $val;
+        $arrRow[strtolower($key)] = $val;
       }
       array_push($arr, $arrRow);
     }
