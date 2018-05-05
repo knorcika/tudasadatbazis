@@ -17,3 +17,5 @@ $constants["USER_LOGIN_EMPTY"] = "Az összes mező kitöltése kötelező!";
 $constants["USER_LOGIN_NOT_FOUND"] = "A felhasználó nem található!";
 $constants["USER_LOGIN_WRONG_PASSWORD"] = "Téves jelszó!";
 $constants["USER_LOGIN_SUCCESS"] = "Sikeres bejelentkezés.";
+
+$constants["DEFAULT_LANG"] = "Magyar";
