@@ -11,7 +11,6 @@ class User extends DB {
   private $nickname = "";
   private $email = "";
   private $pass = "";
-  private $pass2 = "";
   private $tud_fokozat = "";
   private $intezet = "";
   private $szakterulet = "";
@@ -20,6 +19,8 @@ class User extends DB {
 
   private $roles;
   private $getUserByEmailSQL = "SELECT * FROM felhasznalo WHERE email = '{{email}}'";
+  private $insertUserSQL = "INSERT INTO felhasznalo (name, nickname, email, pass, role) VALUES " .
+  "('{{name}}', '{{nickname}}', '{{email}}', '{{pass}}', {{role}})";
 
   /**
    * User constructor.
@@ -58,24 +59,6 @@ class User extends DB {
   }
 
   /**
-   * Átalakítja ezt a felhasználót tömbbé
-   * @return array
-   */
-  public function toArray() {
-    return array(
-      "id" => $this->id,
-      "name" => $this->name,
-      "nickname" => $this->nickname,
-      "email" => $this->email,
-      "pass" => $this->pass,
-      "tud_fokozat" => $this->tud_fokozat,
-      "intezet" => $this->intezet,
-      "szakterulet" => $this->szakterulet,
-      "role" => $this->role,
-    );
-  }
-
-  /**
    * Kijelentkezés
    * @return bool
    */
@@ -83,24 +66,6 @@ class User extends DB {
     global $_SESSION;
     unset($_SESSION["login"]);
     return true;
-  }
-
-  /**
-   * Visszaadja, hogy lektor-e a felhasználó
-   * @return bool
-   */
-  public function isLektor() {
-    global $_SESSION, $constants;
-    return ($this->isLoggedIn() && $_SESSION["login"]["role"] === $this->roles->getRoleId($constants["ROLE_LEKTOR"]));
-  }
-
-  /**
-   * Visszaadja, hogy admin-e a felhasználó
-   * @return bool
-   */
-  public function isAdmin() {
-    global $_SESSION, $constants;
-    return ($this->isLoggedIn() && $_SESSION["login"]["role"] === $this->roles->getRoleId($constants["ROLE_ADMIN"]));
   }
 
   /**
@@ -123,6 +88,24 @@ class User extends DB {
   }
 
   /**
+   * Visszaadja, hogy lektor-e a felhasználó
+   * @return bool
+   */
+  public function isLektor() {
+    global $_SESSION, $constants;
+    return ($this->isLoggedIn() && $_SESSION["login"]["role"] === $this->roles->getRoleId($constants["ROLE_LEKTOR"]));
+  }
+
+  /**
+   * Visszaadja, hogy admin-e a felhasználó
+   * @return bool
+   */
+  public function isAdmin() {
+    global $_SESSION, $constants;
+    return ($this->isLoggedIn() && $_SESSION["login"]["role"] === $this->roles->getRoleId($constants["ROLE_ADMIN"]));
+  }
+
+  /**
    * Felhasználó regisztráció
    * @param $user
    * @return array
@@ -132,10 +115,10 @@ class User extends DB {
     if (!$this->validate($user)) {
       return array(false, $constants["USER_NOT_VALID"]);
     }
-    if (!$this->validate_password($user)) {
+    if (!$this->validatePassword($user)) {
       return array(false, $constants["USER_NOT_VALID_PASSWORD"]);
     }
-    if ($this->isUserExists($user)) {
+    if (count($this->getUserByEmail($user)) > 0) {
       return array(false, $constants["USER_ALREADY_EXISTS"]);
     }
     $this->setUser($user);
@@ -163,21 +146,20 @@ class User extends DB {
    * @param $user
    * @return bool
    */
-  public function validate_password($user) {
+  public function validatePassword($user) {
     if (!$user["pass"]) return false;
     if (!$user["pass2"]) return false;
     return $user["pass"] === $user["pass2"];
   }
 
   /**
-   * Felhasználó létezés ellenőrzése
+   * Visszaadja a felhasználót e-mail cím alapján
    * @param $user
-   * @return bool
+   * @return array
    */
-  public function isUserExists($user) {
+  public function getUserByEmail($user) {
     $sql = replaceValues($this->getUserByEmailSQL, $user);
-    $foundUsers = $this->query($sql)->getFetchedResult();
-    return count($foundUsers) > 0;
+    return $this->query($sql)->getFetchedResult();
   }
 
   /**
@@ -185,10 +167,65 @@ class User extends DB {
    * @return mixed
    */
   public function createNewUser() {
-    $sql = "INSERT INTO felhasznalo (name, nickname, email, pass, role) VALUES " .
-      "('{{name}}', '{{nickname}}', '{{email}}', '{{pass}}', {{role}})";
-    $sql = replaceValues($sql, $this->toArray());
+    $sql = replaceValues($this->insertUserSQL, $this->toArray());
     return $this->query($sql)->getResult();
   }
 
+  /**
+   * Átalakítja ezt a felhasználót tömbbé
+   * @return array
+   */
+  public function toArray() {
+    return array(
+      "id" => $this->id,
+      "name" => $this->name,
+      "nickname" => $this->nickname,
+      "email" => $this->email,
+      "pass" => $this->pass,
+      "tud_fokozat" => $this->tud_fokozat,
+      "intezet" => $this->intezet,
+      "szakterulet" => $this->szakterulet,
+      "role" => $this->role,
+    );
+  }
+
+  /**
+   * Felhasználó bejelentkeztetése
+   * @param $user
+   * @return array
+   */
+  public function login($user) {
+    global $_SESSION, $constants;
+    if (!$this->validateLoginFields($user)) {
+      return array(false, $constants["USER_LOGIN_EMPTY"]);
+    }
+    $foundUser = $this->getUserByEmail($user);
+    if (count($foundUser) !== 1) {
+      return array(false, $constants["USER_LOGIN_NOT_FOUND"]);
+    }
+    $foundUser = $foundUser[0];
+    if (md5($user["pass"]) !== $foundUser["pass"]) {
+      return array(false, $constants["USER_LOGIN_WRONG_PASSWORD"]);
+    }
+    $this->setUser($foundUser);
+
+    //TODO: Lektor adatok és lektor nyelvek lekérdezése ha a felhasználó lektor
+
+    $user = $this->toArray();
+    unset($user["pass"]);
+    $user["logged_in"] = true;
+    $_SESSION['login'] = $user;
+    return array(true, $constants["USER_LOGIN_SUCCESS"]);
+  }
+
+  /**
+   * A login form validálása
+   * @param $user
+   * @return bool
+   */
+  public function validateLoginFields($user) {
+    if (!$user["email"]) return false;
+    if (!$user["pass"]) return false;
+    return true;
+  }
 }
