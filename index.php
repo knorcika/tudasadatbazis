@@ -1,9 +1,10 @@
 <?php
 define('BASE_DIR', dirname(__FILE__));
-require_once BASE_DIR . '/controllers/Page.php';
-require_once BASE_DIR . '/controllers/Menu.php';
 require_once BASE_DIR . '/models/User.php';
 require_once BASE_DIR . '/models/Lang.php';
+require_once BASE_DIR . '/controllers/Page.php';
+require_once BASE_DIR . '/controllers/Menu.php';
+
 $page = "";
 $languages = new Lang();
 $lang = $languages->getDefaultLanguage();
