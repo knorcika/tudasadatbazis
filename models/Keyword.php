@@ -9,7 +9,10 @@ class Keyword extends DB
 
     private $selectKeywordsSQL = "SELECT * FROM cikkkulcsszo WHERE nyelv = {{lang}}";
 
-    //kostruktor
+    /**
+     * Keyword constructor.
+     * @param $lang
+     */
 
     public function __construct($lang) {
         parent::__construct();
@@ -19,13 +22,20 @@ class Keyword extends DB
         }
     }
 
-    //kulcszavakat adja vissza
+    /**
+     * kulcszavakat adja vissza
+     * @return array
+     */
 
     public function getKeywords() {
         return $this->keywords;
     }
 
-    //kulcsszavat adja vissza id alapján
+    /**
+     * kulcsszavat adja vissza id alapján
+     * @param $id
+     * @return mixed
+     */
 
     public function getKeywordById($id) {
         return $this->keywords[$id];
