@@ -5,7 +5,7 @@ require_once BASE_DIR . "/services/replaceValues.php";
 
 class Article extends DB
 {
-    private $getArticleByIdSQL = "SELECT * FROM cikk WHERE felhasznalo = {{id}}";
+    private $getArticleByIdSQL = "SELECT * FROM cikk WHERE id = {{id}}";
 
     private $getArticleByUserSQL = "SELECT * FROM cikk WHERE felhasznalo = {{felhasznalo}}";
     private $getAricleByLektorSQL =  "SELECT * FROM cikk WHERE lektor = {{lektor}}";
