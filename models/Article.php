@@ -65,4 +65,26 @@ class Article extends DB
         $sql = replaceValues($this->getAricleByLangSQL, $article);
         return $this->query($sql)->getFetchedResult();
     }
+
+    /**
+     * Cikkek lekérése az adott kulcsszóra
+     * @param $article
+     * @return array
+     */
+
+    public function getArticlesByKeywords($article) {
+        $sql = replaceValues($this->getArticlesByKeywordsSQL, $article);
+        return $this->query($sql)->getFetchedResult();
+    }
+
+    /**
+     * Cikkek lekérése adott kategória alapján     *
+     * @param $article
+     * @return array
+     */
+
+    public function getArticlesByCategoriesSQL($article) {
+        $sql = replaceValues($this->getArticlesByCategoriesSQL, $article);
+        return $this->query($sql)->getFetchedResult();
+    }
 }
