@@ -18,7 +18,3 @@ $user = new User(array());
 $menu = new Menu($page, $user, $lang);
 $page = new Page($menu->getMenu(), "", "");
 echo $page->getPage();
-
-/**
- * peldasor
- */
