@@ -26,7 +26,3 @@ if (isset($router[$page])) {
 $menu = new Menu($page, $user, $lang);
 $page = new Page($menu->getMenu(), $body, "");
 echo $page->getPage();
-
-/**
- * peldasor
- */
