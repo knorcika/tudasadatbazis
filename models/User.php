@@ -11,9 +11,11 @@ class User extends DB {
   private $nickname = "";
   private $email = "";
   private $pass = "";
+  private $lektorid = "";
   private $tud_fokozat = "";
   private $intezet = "";
   private $szakterulet = "";
+  private $nyelvek = array();
   private $role = "";
 
 
@@ -21,6 +23,9 @@ class User extends DB {
   private $getUserByEmailSQL = "SELECT * FROM felhasznalo WHERE email = '{{email}}'";
   private $insertUserSQL = "INSERT INTO felhasznalo (name, nickname, email, pass, role) VALUES " .
   "('{{name}}', '{{nickname}}', '{{email}}', '{{pass}}', {{role}})";
+  private $getLektorData = "SELECT lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, " .
+  "lektor.id as lektorid, lektornyelv.nyelv, lektornyelv.szint " .
+  "FROM lektor INNER JOIN lektornyelv ON lektor.id = lektornyelv.lektor WHERE lektor.felhasznalo = {{id}}";
 
   /**
    * User constructor.
@@ -203,6 +208,7 @@ class User extends DB {
       "tud_fokozat" => $this->tud_fokozat,
       "intezet" => $this->intezet,
       "szakterulet" => $this->szakterulet,
+      "nyelvek" => $this->nyelvek,
       "role" => $this->role,
     );
   }
@@ -227,7 +233,15 @@ class User extends DB {
     }
     $this->setUser($foundUser);
 
-    //TODO: Lektor adatok és lektor nyelvek lekérdezése ha a felhasználó lektor
+    if ($foundUser["role"] === $this->roles->getRoleId($constants["ROLE_LEKTOR"])) {
+      $data = $this->query(replaceValues($this->getLektorData, $foundUser))->getFetchedResult();
+      if (count($data) > 0) {
+        $this->setUser($data[0]);
+        foreach ($data as $row) {
+          $this->nyelvek[$row["nyelv"]] = $row["szint"];
+        }
+      }
+    }
 
     $user = $this->toArray();
     unset($user["pass"]);
