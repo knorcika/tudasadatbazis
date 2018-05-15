@@ -20,6 +20,8 @@ $constants["USER_LOGIN_SUCCESS"] = "Sikeres bejelentkezés.";
 
 $constants["DEFAULT_LANG"] = "Magyar";
 
+$constants["LOGIN"] = "Bejelentkezés";
+$constants["LOGOUT"] = "Kijelentkezés";
 $constants["REGISTER"] = "Regisztráció";
 $constants["REGISTER_NAME"] = "Teljes név";
 $constants["REGISTER_NICKNAME"] = "Becenév";
