@@ -30,7 +30,7 @@ class Login {
     if (isset($_POST['login'])) {
       $res = $this->user->login($_POST);
       if ($res[0]) {
-        return header("Location: index.php?page=");
+        return header("Location: index.php?page=&lang=" . $this->lang);
       }
       $data = $_POST;
       $message = $res[1];
