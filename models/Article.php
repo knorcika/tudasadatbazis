@@ -18,6 +18,8 @@ class Article extends DB
     private $categories = array();
     private $topics = array();
 
+    private $getArticleByIdSQL = "SELECT * FROM cikk WHERE felhasznalo = {{id}}";
+
     private $getArticleByUserSQL = "SELECT * FROM cikk WHERE felhasznalo = {{felhasznalo}}";
     private $getAricleByLektorSQL =  "SELECT * FROM cikk WHERE lektor = {{lektor}}";
     private $getAricleByLangSQL =  "SELECT * FROM cikk WHERE nyelv = {{lang}}";
@@ -35,12 +37,25 @@ class Article extends DB
     }
 
     /**
+     * adott cikk lekérdezése
+     * @param $article
+     * @return array
+     */
+
+    public function getArticleById($article) {
+        $sql = replaceValues($this->getArticleByIdSQL, $article);
+        return $this->query($sql)->getFetchedResult();
+    }
+
+
+
+    /**
      * Az adott felhasználó által írt cikkek lekérdezése
      * @param $article
      * @return array
      */
 
-    public function getArticelByUser($article) {
+    public function getArticelsByUser($article) {
         $sql = replaceValues($this->getArticleByUserSQL, $article);
         return $this->query($sql)->getFetchedResult();
     }
@@ -50,7 +65,7 @@ class Article extends DB
      * @return array
      */
 
-    public function getArticelByLektor($article) {
+    public function getArticelsByLektor($article) {
         $sql = replaceValues($this->getAricleByLektorSQL, $article);
         return $this->query($sql)->getFetchedResult();
     }
@@ -61,7 +76,7 @@ class Article extends DB
      * @return array
      */
 
-    public function getArticelByLang($article) {
+    public function getArticelsByLang($article) {
         $sql = replaceValues($this->getAricleByLangSQL, $article);
         return $this->query($sql)->getFetchedResult();
     }
