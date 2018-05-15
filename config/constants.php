@@ -19,3 +19,10 @@ $constants["USER_LOGIN_WRONG_PASSWORD"] = "Téves jelszó!";
 $constants["USER_LOGIN_SUCCESS"] = "Sikeres bejelentkezés.";
 
 $constants["DEFAULT_LANG"] = "Magyar";
+
+$constants["REGISTER"] = "Regisztráció";
+$constants["REGISTER_NAME"] = "Teljes név";
+$constants["REGISTER_NICKNAME"] = "Becenév";
+$constants["REGISTER_EMAIL"] = "E-mail";
+$constants["REGISTER_PASSWORD"] = "Jelszó";
+$constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
