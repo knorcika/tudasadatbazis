@@ -37,13 +37,13 @@ class Menu {
     global $menuPoints;
     $view = file_get_contents(BASE_DIR . "/public/views/menu/menuItems.html");
     $menus = "";
-    $roles = $this->user->getRoles();
+    $role = $this->user->getRole();
     foreach ($menuPoints as $menuPoint) {
       $shouldAdd = false;
       $menuPoint["classes"] = "";
       $menu = "";
-      foreach ($roles as $role) {
-        if (in_array($role, $menuPoint["roles"])) $shouldAdd = true;
+      if (in_array($role, $menuPoint["roles"])) {
+        $shouldAdd = true;
       }
       if ($menuPoint["page"] === $this->page) {
         $menuPoint["classes"] .= " active ";

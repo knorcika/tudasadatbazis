@@ -1,10 +1,13 @@
 <?php
 define('BASE_DIR', dirname(__FILE__));
+session_start();
 require_once BASE_DIR . '/models/User.php';
 require_once BASE_DIR . '/models/Lang.php';
 require_once BASE_DIR . '/controllers/Page.php';
 require_once BASE_DIR . '/controllers/Menu.php';
 require_once BASE_DIR . '/controllers/Register.php';
+require_once BASE_DIR . '/controllers/Login.php';
+require_once BASE_DIR . '/controllers/Logout.php';
 
 $page = "index";
 $body = "";
@@ -15,7 +18,9 @@ if (isset($_GET["lang"])) $lang = $_GET["lang"];
 $user = new User(array());
 
 $router = array(
-  "register" => "Register"
+  "register" => "Register",
+  "login" => "Login",
+  "logout" => "Logout",
 );
 
 if (isset($router[$page])) {

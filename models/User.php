@@ -88,6 +88,24 @@ class User extends DB {
   }
 
   /**
+   * Visszaadja a user legmagasabb jogosultságát
+   * @return string
+   */
+  public function getRole() {
+    global $constants;
+    if ($this->isAdmin()) {
+      return $constants["ROLE_ADMIN"];
+    }
+    if ($this->isLektor()) {
+      return $constants["ROLE_LEKTOR"];
+    }
+    if ($this->isLoggedIn()) {
+      return $constants["ROLE_USER"];
+    }
+    return $constants["ROLE_VISITOR"];
+  }
+
+  /**
    * Visszaadja, hogy lektor-e a felhasználó
    * @return bool
    */
