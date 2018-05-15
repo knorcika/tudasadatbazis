@@ -5,19 +5,6 @@ require_once BASE_DIR . "/services/replaceValues.php";
 
 class Article extends DB
 {
-    private $id = "";
-    private $cim = "";
-    private $text = "";
-    private $status = "";
-
-    private $felhasznalo = "";
-    private $lektor = "";
-    private $nyelv = "";
-
-    private $keywords = array();
-    private $categories = array();
-    private $topics = array();
-
     private $getArticleByIdSQL = "SELECT * FROM cikk WHERE felhasznalo = {{id}}";
 
     private $getArticleByUserSQL = "SELECT * FROM cikk WHERE felhasznalo = {{felhasznalo}}";
@@ -46,8 +33,6 @@ class Article extends DB
         $sql = replaceValues($this->getArticleByIdSQL, $article);
         return $this->query($sql)->getFetchedResult();
     }
-
-
 
     /**
      * Az adott felhasználó által írt cikkek lekérdezése
