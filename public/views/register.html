@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="col-md-4 offset-md-4">
+        <h3>{{REGISTER}}</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="name">{{REGISTER_NAME}}</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{name}}"
+                       placeholder="{{REGISTER_NAME}}">
+            </div>
+            <div class="form-group">
+                <label for="nickname">{{REGISTER_NICKNAME}}</label>
+                <input type="text" class="form-control" id="nickname" name="nickname"
+                       value="{{nickname}}" placeholder="{{REGISTER_NICKNAME}}">
+            </div>
+            <div class="form-group">
+                <label for="email">{{REGISTER_EMAIL}}</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{email}}"
+                       placeholder="{{REGISTER_EMAIL}}">
+            </div>
+            <div class="form-group">
+                <label for="pass">{{REGISTER_PASSWORD}}</label>
+                <input type="password" class="form-control" id="pass" name="pass" value="{{pass}}"
+                       placeholder="{{REGISTER_PASSWORD}}">
+            </div>
+            <div class="form-group">
+                <label for="pass2">{{REGISTER_PASSWORD2}}</label>
+                <input type="password" class="form-control" id="pass2" name="pass2" value="{{pass2}}"
+                       placeholder="{{REGISTER_PASSWORD2}}">
+            </div>
+            <div class="form-group text-center">
+                <p>{{message}}</p>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary" id="register" name="register">{{REGISTER}}</button>
+            </div>
+        </form>
+    </div>
+</div>
