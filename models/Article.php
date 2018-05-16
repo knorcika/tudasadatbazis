@@ -16,8 +16,8 @@ class Article extends DB
     private $getArticlesByCategoriesSQL = "SELECT * FROM cikk INNER JOIN cikktemakor ON cikk.id = cikktemakor.cikk
                                          INNER JOIN cikkkulcsszo.kulcsszo = {{category}}";
 
-    private $insertArticleSQL = "INSERT INTO cikk (nyelv, felhasznalo, lektor, cim, status, text) VALUES " .
-"('{{nyelv}}', '{{felhasznalo}}', '{{lektor}}', '{{cim}}', '{{status}}', '{{text}}' )";
+  private $insertArticleSQL = "INSERT INTO cikk (nyelv, felhasznalo, cim, status, text) VALUES " .
+  "({{nyelv}}, {{felhasznalo}}, '{{cim}}', '{{status}}', '{{text}}' )";
 
     public function __construct() {
         parent::__construct();
@@ -30,7 +30,7 @@ class Article extends DB
      */
 
     public function getArticleById($id) {
-        $sql = replaceValues($this->getArticleByIdSQL, $id);
+      $sql = replaceValues($this->getArticleByIdSQL, array("id" => $id));
         return $this->query($sql)->getFetchedResult();
     }
 
@@ -41,7 +41,7 @@ class Article extends DB
      */
 
     public function getArticelsByUser($userid) {
-        $sql = replaceValues($this->getArticleByUserSQL, $userid);
+      $sql = replaceValues($this->getArticleByUserSQL, array("userid" => $userid));
         return $this->query($sql)->getFetchedResult();
     }
 
@@ -51,7 +51,7 @@ class Article extends DB
      */
 
     public function getArticelsByLektor($lectorid) {
-        $sql = replaceValues($this->getAricleByLektorSQL, $lectorid);
+      $sql = replaceValues($this->getAricleByLektorSQL, array("lectorid" => $lectorid));
         return $this->query($sql)->getFetchedResult();
     }
 
@@ -62,7 +62,7 @@ class Article extends DB
      */
 
     public function getArticelsByNyelv($nyelvid) {
-        $sql = replaceValues($this->getAricleByLangSQL, $nyelvid);
+      $sql = replaceValues($this->getAricleByLangSQL, array("nyelvid" => $nyelvid));
         return $this->query($sql)->getFetchedResult();
     }
 
@@ -73,7 +73,7 @@ class Article extends DB
      */
 
     public function getArticlesByKeywords($keyword) {
-        $sql = replaceValues($this->getArticlesByKeywordsSQL, $keyword);
+      $sql = replaceValues($this->getArticlesByKeywordsSQL, array("keyword" => $keyword));
         return $this->query($sql)->getFetchedResult();
     }
 
@@ -87,4 +87,16 @@ class Article extends DB
         $sql = replaceValues($this->getArticlesByCategoriesSQL, $category);
         return $this->query($sql)->getFetchedResult();
     }
+
+  /**
+   * Új cikk létrehozása
+   * @param $article
+   * @return mixed
+   */
+  public function insertArticle($article) {
+    global $constants;
+    $article["status"] = $constants["ARTICLE_OPEN"];
+    $sql = replaceValues($this->insertArticleSQL, $article);
+    return $this->query($sql)->getResult();
+  }
 }
