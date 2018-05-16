@@ -8,6 +8,7 @@ require_once BASE_DIR . '/controllers/Menu.php';
 require_once BASE_DIR . '/controllers/Register.php';
 require_once BASE_DIR . '/controllers/Login.php';
 require_once BASE_DIR . '/controllers/Logout.php';
+require_once BASE_DIR . '/controllers/BeLektor.php';
 
 $page = "index";
 $body = "";
@@ -21,6 +22,7 @@ $router = array(
   "register" => "Register",
   "login" => "Login",
   "logout" => "Logout",
+  "be_lektor" => "BeLektor",
 );
 
 if (isset($router[$page])) {
