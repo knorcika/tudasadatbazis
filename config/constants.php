@@ -28,3 +28,5 @@ $constants["REGISTER_NICKNAME"] = "Becenév";
 $constants["REGISTER_EMAIL"] = "E-mail";
 $constants["REGISTER_PASSWORD"] = "Jelszó";
 $constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
+
+$constants["NEW_ARTICLE"] = "Új cikk létrehozása";
