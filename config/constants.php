@@ -7,6 +7,10 @@ $constants["ROLE_USER"] = "user";
 $constants["ROLE_LEKTOR"] = "lektor";
 $constants["ROLE_ADMIN"] = "admin";
 
+$constants["ARTICLE_OPEN"] = "open";
+$constants["ARTICLE_PENDING"] = "pending";
+$constants["ARTICLE_APPROVED"] = "approved";
+
 $constants["USER_NOT_VALID"] = "Az összes mező kitöltése kötelező!";
 $constants["USER_NOT_VALID_PASSWORD"] = "A jelszavak nem egyeznek meg!";
 $constants["USER_ALREADY_EXISTS"] = "Ezzel az e-mail címmel már regisztráltak!";
