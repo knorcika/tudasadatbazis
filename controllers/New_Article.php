@@ -3,7 +3,7 @@ require_once BASE_DIR . "/config/menuPoints.php";
 require_once BASE_DIR . "/services/replaceValues.php";
 require_once BASE_DIR . "/services/getView.php";
 
-class Make_Article
+class New_Article
 {
     private $page = "";
     private $user;
@@ -21,6 +21,6 @@ class Make_Article
     }
 
     public function getBody() {
-
+        global $_POST;
     }
 }

@@ -30,3 +30,5 @@ $constants["REGISTER_PASSWORD"] = "Jelszó";
 $constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
 
 $constants["NEW_ARTICLE"] = "Új cikk létrehozása";
+$constants["NEW_ARTICLE_SEND"] = "Elküld";
+$constants["NEW_ARTICLE_TITLE"] = "Cím";
