@@ -2,14 +2,15 @@
 require_once BASE_DIR . "/config/menuPoints.php";
 require_once BASE_DIR . "/services/replaceValues.php";
 require_once BASE_DIR . "/services/getView.php";
+require_once BASE_DIR . "/models/Lang.php";
 
-class Login {
+class BeLektor {
   private $page = "";
   private $user;
   private $lang;
 
   /**
-   * Menu constructor.
+   * BeLektor constructor.
    * @param $page
    * @param $user
    */
@@ -25,19 +26,27 @@ class Login {
    */
   public function getBody() {
     global $_POST, $constants;
-    $data = $this->user->toArray();
     $message = "";
-    if (isset($_POST['login'])) {
-      $res = $this->user->login($_POST);
-      if ($res[0]) {
-        return header("Location: index.php?page=&lang=" . $this->lang);
-      }
-      $data = $_POST;
+    if (isset($_POST['submit'])) {
+      $res = $this->user->insertLektor($_POST);
       $message = $res[1];
     }
+    $data = $this->user->toArray();
+    $data["lektornyelvek"] = $this->getLangs();
+    $view = getView('lektor/belektor.html');
     $data["message"] = $message;
-    $view = getView('login.html');
     $view = replaceValues($view, $data);
     return $view;
+  }
+
+  public function getLangs() {
+    $lektorNyelvek = "";
+    $view = getView('lektor/lektorNyelvek.html');
+    $langs = new Lang();
+    foreach ($langs->getLanguages() as $id => $nyelv) {
+      $lektorNyelv = replaceValues($view, array("id" => $id, "nyelv" => $nyelv));
+      $lektorNyelvek .= $lektorNyelv . PHP_EOL;
+    }
+    return $lektorNyelvek;
   }
 }

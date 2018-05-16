@@ -7,7 +7,7 @@
  */
 function replaceValues($text, $data) {
   foreach ($data as $key => $val) {
-    if (is_string($val)) {
+    if (is_string($val) || is_numeric($val)) {
       $text = str_replace("{{{$key}}}", $val, $text);
     }
   }

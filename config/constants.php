@@ -7,6 +7,10 @@ $constants["ROLE_USER"] = "user";
 $constants["ROLE_LEKTOR"] = "lektor";
 $constants["ROLE_ADMIN"] = "admin";
 
+$constants["ARTICLE_OPEN"] = "open";
+$constants["ARTICLE_PENDING"] = "pending";
+$constants["ARTICLE_APPROVED"] = "approved";
+
 $constants["USER_NOT_VALID"] = "Az összes mező kitöltése kötelező!";
 $constants["USER_NOT_VALID_PASSWORD"] = "A jelszavak nem egyeznek meg!";
 $constants["USER_ALREADY_EXISTS"] = "Ezzel az e-mail címmel már regisztráltak!";
@@ -23,6 +27,7 @@ $constants["DEFAULT_LANG"] = "Magyar";
 $constants["LOGIN"] = "Bejelentkezés";
 $constants["LOGOUT"] = "Kijelentkezés";
 $constants["REGISTER"] = "Regisztráció";
+
 $constants["REGISTER_NAME"] = "Teljes név";
 $constants["REGISTER_NICKNAME"] = "Becenév";
 $constants["REGISTER_EMAIL"] = "E-mail";
@@ -32,3 +37,17 @@ $constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
 $constants["NEW_ARTICLE"] = "Új cikk létrehozása";
 $constants["NEW_ARTICLE_SEND"] = "Elküld";
 $constants["NEW_ARTICLE_TITLE"] = "Cím";
+
+$constants["BE_LEKTOR"] = "Jelentkezz lektornak";
+$constants["BE_LEKTOR_MISSING_FIELD"] = "A lektor adatok kitöltése kötelező!";
+$constants["BE_LEKTOR_MISSING_LANGS"] = "Legalább egy nyelv választása kötelező!";
+$constants["BE_LEKTOR_CREATE_SUCCESSFUL"] = "Jelentkezés sikeres!";
+$constants["BE_LEKTOR_UPDATE_SUCCESSFUL"] = "Sikeresen frissítettük az adatokat!";
+
+$constants["LEKTOR_TUD_FOKOZAT"] = "Tudományos fokozat";
+$constants["LEKTOR_INTEZET"] = "Intézet";
+$constants["LEKTOR_SZAKTERULET"] = "Szakterület";
+$constants["LEKTOR_NYELVEK"] = "Nyelvek";
+$constants["LEKTOR_NYELVEK_SZINT"] = "Szint";
+$constants["LEKTOR_JELENTKEZES"] = "Jelentkezem";
+
