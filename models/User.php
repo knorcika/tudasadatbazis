@@ -35,6 +35,7 @@ class User extends DB {
   "SET tud_fokozat = '{{tud_fokozat}}', intezet = '{{intezet}}', szakterulet = '{{szakterulet}}' " .
   "WHERE felhasznalo = {{id}}";
   private $deleteNyelv = "DELETE FROM lektornyelv WHERE lektor = {{lektorid}}";
+  private $updateLektorRole = "UPDATE felhasznalo SET role = {{role}} WHERE felhasznalo = {{id}}";
 
   /**
    * User constructor.
@@ -289,6 +290,9 @@ class User extends DB {
           $this->query($sql)->getResult();
         }
       }
+
+      $this->updateLektorRole($lektor);
+
       $this->getLektorData();
       $this->updateSession();
       return array(true, $constants["BE_LEKTOR_UPDATE_SUCCESSFUL"]);
@@ -358,6 +362,21 @@ class User extends DB {
     }
     return true;
   }
+
+    /**
+     * Lektor jogosultságának beállítása
+     * @param $lektor
+     * @return mixed
+     */
+
+  public function updateLektorRole($lektor){
+      global $constants;
+      $lektor->role = $lektor->roles->getRoleId($constants["ROLE_LEKTOR"]);
+      $sql = replaceValues($this->updateLektorRole, $lektor->toArray());
+      $this->query($sql)->getResult();
+      return $lektor;
+  }
+
 
   /**
    * Frissíti a login sessiont
