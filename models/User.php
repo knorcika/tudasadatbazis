@@ -23,9 +23,18 @@ class User extends DB {
   private $getUserByEmailSQL = "SELECT * FROM felhasznalo WHERE email = '{{email}}'";
   private $insertUserSQL = "INSERT INTO felhasznalo (name, nickname, email, pass, role) VALUES " .
   "('{{name}}', '{{nickname}}', '{{email}}', '{{pass}}', {{role}})";
-  private $getLektorData = "SELECT lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, " .
-  "lektor.id as lektorid, lektornyelv.nyelv, lektornyelv.szint " .
+  private $getLektorDataSQL = "SELECT lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, " .
+  "lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint " .
   "FROM lektor INNER JOIN lektornyelv ON lektor.id = lektornyelv.lektor WHERE lektor.felhasznalo = {{id}}";
+  private $getLektorSQL = "SELECT tud_fokozat, intezet, szakterulet, id as lektorid FROM lektor WHERE felhasznalo = {{id}}";
+  private $insertLektorSQL = "INSERT INTO lektor (felhasznalo, tud_fokozat, intezet, szakterulet) VALUES " .
+  "({{id}}, '{{tud_fokozat}}', '{{intezet}}', '{{szakterulet}}')";
+  private $insertNyelvSQL = "INSERT INTO lektornyelv (lektor, nyelv, szint) VALUES " .
+  "({{lektorid}}, {{nyelvid}}, '{{szint}}')";
+  private $updateLektorSQL = "UPDATE lektor " .
+  "SET tud_fokozat = '{{tud_fokozat}}', intezet = '{{intezet}}', szakterulet = '{{szakterulet}}' " .
+  "WHERE felhasznalo = {{id}}";
+  private $deleteNyelv = "DELETE FROM lektornyelv WHERE lektor = {{lektorid}}";
 
   /**
    * User constructor.
@@ -205,6 +214,7 @@ class User extends DB {
       "nickname" => $this->nickname,
       "email" => $this->email,
       "pass" => $this->pass,
+      "lektorid" => $this->lektorid,
       "tud_fokozat" => $this->tud_fokozat,
       "intezet" => $this->intezet,
       "szakterulet" => $this->szakterulet,
@@ -232,21 +242,8 @@ class User extends DB {
       return array(false, $constants["USER_LOGIN_WRONG_PASSWORD"]);
     }
     $this->setUser($foundUser);
-
-    if ($foundUser["role"] === $this->roles->getRoleId($constants["ROLE_LEKTOR"])) {
-      $data = $this->query(replaceValues($this->getLektorData, $foundUser))->getFetchedResult();
-      if (count($data) > 0) {
-        $this->setUser($data[0]);
-        foreach ($data as $row) {
-          $this->nyelvek[$row["nyelv"]] = $row["szint"];
-        }
-      }
-    }
-
-    $user = $this->toArray();
-    unset($user["pass"]);
-    $user["logged_in"] = true;
-    $_SESSION['login'] = $user;
+    $this->getLektorData();
+    $this->updateSession();
     return array(true, $constants["USER_LOGIN_SUCCESS"]);
   }
 
@@ -259,5 +256,117 @@ class User extends DB {
     if (!$user["email"]) return false;
     if (!$user["pass"]) return false;
     return true;
+  }
+
+  /**
+   * @param $lektor
+   * @return array
+   */
+  public function insertLektor($lektor) {
+    $this->getLektorData();
+    global $constants;
+    if (!$this->validateLektorFields($lektor)) {
+      return array(false, $constants["BE_LEKTOR_MISSING_FIELD"]);
+    }
+    if (!$this->validateLektorNyelvek($lektor["nyelvek"])) {
+      return array(false, $constants["BE_LEKTOR_MISSING_LANGS"]);
+    }
+    $this->setUser($lektor);
+    if ($this->lektorid && $this->lektorid > 0) {
+      $sql = replaceValues($this->updateLektorSQL, $this->toArray());
+      $this->query($sql)->getResult();
+
+      $sql = replaceValues($this->deleteNyelv, $this->toArray());
+      $this->query($sql)->getResult();
+
+      foreach ($lektor["nyelvek"] as $nyelvid => $szint) {
+        if ($szint) {
+          $sql = replaceValues($this->insertNyelvSQL, array(
+            "lektorid" => $this->lektorid,
+            "nyelvid" => $nyelvid,
+            "szint" => $szint
+          ));
+          $this->query($sql)->getResult();
+        }
+      }
+      $this->getLektorData();
+      $this->updateSession();
+      return array(true, $constants["BE_LEKTOR_UPDATE_SUCCESSFUL"]);
+    } else {
+      $sql = replaceValues($this->insertLektorSQL, $this->toArray());
+      $this->query($sql)->getResult();
+
+      $sql = replaceValues($this->getLektorSQL, $this->toArray());
+      $newLektor = $this->query($sql)->getFetchedResult();
+      $newLektor = $newLektor[0];
+      $this->setUser($newLektor);
+
+      foreach ($lektor["nyelvek"] as $nyelvid => $szint) {
+        if ($szint) {
+          $sql = replaceValues($this->insertNyelvSQL, array(
+            "lektorid" => $this->lektorid,
+            "nyelvid" => $nyelvid,
+            "szint" => $szint
+          ));
+          $this->query($sql)->getResult();
+        }
+      }
+
+      $this->getLektorData();
+      $this->updateSession();
+      return array(true, $constants["BE_LEKTOR_CREATE_SUCCESSFUL"]);
+    }
+  }
+
+  /**
+   * @param $lektor
+   * @return bool
+   */
+  public function validateLektorFields($lektor) {
+    if (!$lektor["tud_fokozat"]) return false;
+    if (!$lektor["intezet"]) return false;
+    if (!$lektor["szakterulet"]) return false;
+    return true;
+  }
+
+  /**
+   * @param $nyelvek
+   * @return bool
+   */
+  public function validateLektorNyelvek($nyelvek) {
+    foreach ($nyelvek as $id => $szint) {
+      if ($szint) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Lekérdezzük a lektor adatokat a db-ből
+   */
+  public function getLektorData() {
+    $sql = replaceValues($this->getLektorDataSQL, $this->toArray());
+    $data = $this->query($sql)->getFetchedResult();
+    if (count($data) > 0) {
+      $this->setUser($data[0]);
+      foreach ($data as $row) {
+        if (isset($row["nyelv"]) && isset($row["szint"])) {
+          $this->nyelvek[$row["nyelv"]] = $row["szint"];
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Frissíti a login sessiont
+   */
+  private function updateSession() {
+    global $_SESSION;
+    $user = $this->toArray();
+    unset($user["pass"]);
+    $user["logged_in"] = true;
+    $_SESSION['login'] = $user;
   }
 }

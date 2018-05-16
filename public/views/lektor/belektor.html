@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="col-md-4 offset-md-4">
+        <h3>{{BE_LEKTOR}}</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="tud_fokozat">{{LEKTOR_TUD_FOKOZAT}}</label>
+                <input type="text" class="form-control" id="tud_fokozat" name="tud_fokozat" value="{{tud_fokozat}}"
+                       required placeholder="{{LEKTOR_TUD_FOKOZAT}}">
+            </div>
+            <div class="form-group">
+                <label for="intezet">{{LEKTOR_INTEZET}}</label>
+                <input type="text" class="form-control" id="intezet" name="intezet" value="{{intezet}}"
+                       required placeholder="{{LEKTOR_INTEZET}}">
+            </div>
+            <div class="form-group">
+                <label for="szakterulet">{{LEKTOR_SZAKTERULET}}</label>
+                <input type="text" class="form-control" id="szakterulet" name="szakterulet" value="{{szakterulet}}"
+                       required placeholder="{{LEKTOR_SZAKTERULET}}">
+            </div>
+            <h4>{{LEKTOR_NYELVEK}}</h4>
+            {{lektornyelvek}}
+            <div class="form-group text-center">
+                <p>{{message}}</p>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary" id="submit" name="submit">{{LEKTOR_JELENTKEZES}}</button>
+            </div>
+        </form>
+    </div>
+</div>
