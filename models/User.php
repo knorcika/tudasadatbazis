@@ -27,6 +27,7 @@ class User extends DB {
   "lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint " .
   "FROM lektor INNER JOIN lektornyelv ON lektor.id = lektornyelv.lektor WHERE lektor.felhasznalo = {{id}}";
   private $getLektorSQL = "SELECT tud_fokozat, intezet, szakterulet, id as lektorid FROM lektor WHERE felhasznalo = {{id}}";
+  private $getAllLektorsSQL = "SELECT * FROM felhasznalo INNER JOIN lektor on felhasznalo.id = lektor.felhasznalo";
   private $insertLektorSQL = "INSERT INTO lektor (felhasznalo, tud_fokozat, intezet, szakterulet) VALUES " .
   "({{id}}, '{{tud_fokozat}}', '{{intezet}}', '{{szakterulet}}')";
   private $insertNyelvSQL = "INSERT INTO lektornyelv (lektor, nyelv, szint) VALUES " .
@@ -42,6 +43,8 @@ class User extends DB {
   lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint
   FROM felhasznalo INNER JOIN lektor ON lektor.felhasznalo = felhasznalo.id INNER JOIN lektornyelv ON lektornyelv.lektor = lektor.id
   WHERE felhasznalo.role = {{role}}";
+
+
 
 
   /**
@@ -368,7 +371,7 @@ class User extends DB {
   }
 
     /**
-     * adott felhasz
+     * adott felhasználó jogosultság frissítése lektorrá
      * @param $id
      * @return mixed
      */
@@ -377,6 +380,16 @@ class User extends DB {
       global $constants;
       $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
       $sql = replaceValues($this->updateLektorRole, array("role" => $role, "id" => $id));
+      return $this->query($sql)->getResult();
+  }
+
+    /**
+     * visszaadja azokat a felhasználókat, akik lektorok
+     * @return mixed
+     */
+
+  public function getAllLektors(){
+      $sql = $this->getAllLektorsSQL;
       return $this->query($sql)->getResult();
   }
 
