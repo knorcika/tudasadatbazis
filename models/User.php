@@ -36,7 +36,7 @@ class User extends DB {
   "WHERE felhasznalo = {{id}}";
   private $deleteNyelv = "DELETE FROM lektornyelv WHERE lektor = {{lektorid}}";
 
-  private $updateLektorRole = "UPDATE felhasznalo SET role = {{role}} WHERE felhasznalo = {{id}}";
+  private $updateLektorRole = "UPDATE felhasznalo SET role = {{role}} WHERE id = {{id}}";
 
   private $getSignedLectorsSQL = "SELECT felhasznalo.id, felhasznalo.name, felhasznalo.email, 
   lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint

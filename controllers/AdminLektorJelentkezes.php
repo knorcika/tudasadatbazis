@@ -28,8 +28,8 @@ class AdminLektorJelentkezes {
     global $_POST, $constants;
     $message = "";
     if (isset($_POST['submit'])) {
-      //itt a felhasználóid amit updatelni kell adminná
       $id = $_POST['submit'];
+      $this->user->updateLektorRole($id);
     }
 
     $jelentkezok = $this->getJelentkezok();
