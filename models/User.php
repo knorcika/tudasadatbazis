@@ -35,10 +35,14 @@ class User extends DB {
   "SET tud_fokozat = '{{tud_fokozat}}', intezet = '{{intezet}}', szakterulet = '{{szakterulet}}' " .
   "WHERE felhasznalo = {{id}}";
   private $deleteNyelv = "DELETE FROM lektornyelv WHERE lektor = {{lektorid}}";
+
+  private $updateLektorRole = "UPDATE felhasznalo SET role = {{role}} WHERE felhasznalo = {{id}}";
+
   private $getSignedLectorsSQL = "SELECT felhasznalo.id, felhasznalo.name, felhasznalo.email, 
   lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint
   FROM felhasznalo INNER JOIN lektor ON lektor.felhasznalo = felhasznalo.id INNER JOIN lektornyelv ON lektornyelv.lektor = lektor.id
   WHERE felhasznalo.role = {{role}}";
+
 
   /**
    * User constructor.
@@ -292,6 +296,7 @@ class User extends DB {
           $this->query($sql)->getResult();
         }
       }
+
       $this->getLektorData();
       $this->updateSession();
       return array(true, $constants["BE_LEKTOR_UPDATE_SUCCESSFUL"]);
@@ -361,6 +366,20 @@ class User extends DB {
     }
     return true;
   }
+
+    /**
+     * adott felhasz
+     * @param $id
+     * @return mixed
+     */
+
+  public function updateLektorRole($id){
+      global $constants;
+      $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
+      $sql = replaceValues($this->updateLektorRole, array("role" => $role, "id" => $id));
+      return $this->query($sql)->getResult();
+  }
+
 
   /**
    * Frissíti a login sessiont
