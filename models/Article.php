@@ -22,6 +22,8 @@ class Article extends DB {
   private $insertCikkTemakorSQL = "INSERT INTO cikktemakor (cikk, temakor) VALUES ({{cikk}}, {{temakor}})";
   private $insertCikkKulcsszoSQL = "INSERT INTO cikkkulcsszo (cikk, kulcsszo) VALUES ({{cikk}}, {{kulcsszo}})";
 
+  private $updateLektorIdSQL = "UPDATE cikk SET lektor = {{lektorId}} WHERE id = {{id}}";
+
   public function __construct() {
     parent::__construct();
   }
@@ -89,6 +91,17 @@ class Article extends DB {
   public function getArticlesByCategoriesSQL($category) {
     $sql = replaceValues($this->getArticlesByCategoriesSQL, $category);
     return $this->query($sql)->getFetchedResult();
+  }
+
+    /** Lektor hozzárendelése egy cikkhez
+     * @param $lektorId
+     * @param $articleId
+     * @return array
+     */
+
+  public function updateLektorIdSQL($lektorId, $articleId) {
+      $sql = replaceValues($this->updateLektorIdSQL, array("lektor" => $lektorId, "id" => $articleId));
+      return $this->query($sql)->getFetchedResult();
   }
 
   /**
