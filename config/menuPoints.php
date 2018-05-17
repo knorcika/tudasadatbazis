@@ -2,6 +2,16 @@
 require_once BASE_DIR . "/config/constants.php";
 $menuPoints = array(
   array(
+    "title" => $constants["NEW_ARTICLE"],
+    "href" => "?page=new_article",
+    "page" => "new_article",
+    "roles" => array(
+      $constants["ROLE_USER"],
+      $constants["ROLE_LEKTOR"],
+      $constants["ROLE_ADMIN"]
+    )
+  ),
+  array(
     "title" => $constants["ADMIN_LEKTOR_JELENTKEZES"],
     "href" => "?page=admin_jelentkezes",
     "page" => "admin_jelentkezes",

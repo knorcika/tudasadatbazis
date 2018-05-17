@@ -3,41 +3,34 @@ require_once BASE_DIR . "/services/DB.php";
 require_once BASE_DIR . "/config/constants.php";
 require_once BASE_DIR . "/services/replaceValues.php";
 
-class Keyword extends DB
-{
-    private $keywords = array();
+class Keyword extends DB {
+  private $keywords = array();
 
-    private $selectKeywordsSQL = "SELECT * FROM cikkkulcsszo WHERE nyelv = {{lang}}";
+  private $selectKeywordsSQL = "SELECT * FROM kulcsszo WHERE name = '{{name}}' AND nyelv = {{nyelv}}";
+  private $insertKeywordsSQL = "INSERT INTO kulcsszo (name, nyelv) VALUES ('{{name}}', {{nyelv}}) RETURNING id INTO :id_out";
 
-    /**
-     * Keyword constructor.
-     * @param $lang
-     */
+  /**
+   * Keyword constructor.
+   * @param $lang
+   */
 
-    public function __construct($lang) {
-        parent::__construct();
-        $keywords = $this->query(replaceValues($this->selectKeywordsSQL, array("lang" => $lang)))->getFetchedResult();
-        foreach ($keywords as $keyword) {
-            $this->keywords[$keyword["id"]] = $keyword["name"];
-        }
+  public function __construct() {
+    parent::__construct();
+  }
+
+  /**
+   * Létrehozza a kulcsszavat
+   * @param $keyword
+   * @param $nyelv
+   * @return mixed
+   */
+  public function insertKeyword($keyword, $nyelv) {
+    $sql = replaceValues($this->selectKeywordsSQL, array("name" => $keyword, "nyelv" => $nyelv));
+    $data = $this->query($sql)->getFetchedResult();
+    if (count($data)) {
+      return $data[0]["id"];
     }
-
-    /**
-     * kulcszavakat adja vissza
-     * @return array
-     */
-
-    public function getKeywords() {
-        return $this->keywords;
-    }
-
-    /**
-     * kulcsszavat adja vissza id alapján
-     * @param $id
-     * @return mixed
-     */
-
-    public function getKeywordById($id) {
-        return $this->keywords[$id];
-    }
+    $sql = replaceValues($this->insertKeywordsSQL, array("name" => $keyword, "nyelv" => $nyelv));
+    return $this->query($sql)->getId();
+  }
 }

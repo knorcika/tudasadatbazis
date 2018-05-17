@@ -4,6 +4,7 @@ include BASE_DIR . "/config/database.php";
 class DB {
   private $connection;
   private $result;
+  private $id;
 
   public function __construct() {
     global $dbConfig;
@@ -25,6 +26,9 @@ class DB {
   public function query($sql) {
     try {
       $this->result = oci_parse($this->connection, $sql);
+      if (strpos($sql, ':id_out') !== false) {
+        oci_bind_by_name($this->result, ":id_out", $this->id);
+      }
       oci_execute($this->result);
     } catch (Exception $e) {
       echo $e["message"];
@@ -46,5 +50,9 @@ class DB {
       array_push($arr, $arrRow);
     }
     return $arr;
+  }
+
+  public function getId() {
+    return $this->id;
   }
 }
