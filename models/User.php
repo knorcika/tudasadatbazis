@@ -27,7 +27,6 @@ class User extends DB {
   "lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint " .
   "FROM lektor INNER JOIN lektornyelv ON lektor.id = lektornyelv.lektor WHERE lektor.felhasznalo = {{id}}";
   private $getLektorSQL = "SELECT tud_fokozat, intezet, szakterulet, id as lektorid FROM lektor WHERE felhasznalo = {{id}}";
-  private $getAllLektorsSQL = "SELECT * FROM felhasznalo INNER JOIN lektor on felhasznalo.id = lektor.felhasznalo";
   private $insertLektorSQL = "INSERT INTO lektor (felhasznalo, tud_fokozat, intezet, szakterulet) VALUES " .
   "({{id}}, '{{tud_fokozat}}', '{{intezet}}', '{{szakterulet}}')";
   private $insertNyelvSQL = "INSERT INTO lektornyelv (lektor, nyelv, szint) VALUES " .
@@ -43,6 +42,11 @@ class User extends DB {
   lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint
   FROM felhasznalo INNER JOIN lektor ON lektor.felhasznalo = felhasznalo.id INNER JOIN lektornyelv ON lektornyelv.lektor = lektor.id
   WHERE felhasznalo.role = {{role}}";
+
+  private $getAllLektorsSQL = "SELECT felhasznalo.id, felhasznalo.name, felhasznalo.email, felhasznalo.pass, felhasznalo.role,
+  lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint FROM 
+  felhasznalo INNER JOIN lektor ON lektornyelv.lektor = lektor.id INNER JOIN lektornyelv ON lektornyelv.lektor = lektor.id lektornyelv 
+  WHERE  felhasznalo.role = {{role}} AND lektornyelv.nyelv = {{nyelvid}}";
 
 
 
@@ -384,12 +388,15 @@ class User extends DB {
   }
 
     /**
-     * visszaadja azokat a felhasználókat, akik lektorok
+     * visszaadja azoknak a felhasználóknak az adatait, akik lektorok
+     * @param $nyelvid
      * @return mixed
      */
 
-  public function getAllLektors(){
-      $sql = $this->getAllLektorsSQL;
+  public function getAllLektors($nyelvid){
+      global $constants;
+      $role = $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
+      $sql = replaceValues($this->getAllLektorsSQL, array("role" => $role, "id" => $nyelvid));
       return $this->query($sql)->getResult();
   }
 
