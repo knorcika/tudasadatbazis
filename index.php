@@ -10,6 +10,7 @@ require_once BASE_DIR . '/controllers/Login.php';
 require_once BASE_DIR . '/controllers/Logout.php';
 require_once BASE_DIR . '/controllers/BeLektor.php';
 require_once BASE_DIR . '/controllers/AdminLektorJelentkezes.php';
+require_once BASE_DIR . '/controllers/NewArticle.php';
 
 $page = "index";
 $body = "";
@@ -25,6 +26,7 @@ $router = array(
   "logout" => "Logout",
   "be_lektor" => "BeLektor",
   "admin_jelentkezes" => "AdminLektorJelentkezes",
+  "new_article" => "NewArticle",
 );
 
 if (isset($router[$page])) {

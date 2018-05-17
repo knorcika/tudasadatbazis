@@ -37,8 +37,9 @@ $constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
 $constants["NEW_ARTICLE"] = "Új cikk létrehozása";
 $constants["NEW_ARTICLE_SEND"] = "Elküld";
 $constants["NEW_ARTICLE_TITLE"] = "Cím";
+$constants["NEW_ARTICLE_TEXT"] = "Szöveg";
 $constants["NEW_ARTICLE_LANGUAGE"] = "Nyelv";
-$constants["NEW_ARTICLE_KEYWORDS"] = "Kulcsszavak";
+$constants["NEW_ARTICLE_KEYWORDS"] = "Kulcsszavak (szóközzel elválasztva)";
 $constants["NEW_ARTICLE_TOPICS"] = "Témakörök";
 $constants["NEW_ARTICLE_SUCCESS"] = "Sikeres cikk feltöltés!";
 
