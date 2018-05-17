@@ -291,8 +291,6 @@ class User extends DB {
         }
       }
 
-      $this->updateLektorRole($lektor);
-
       $this->getLektorData();
       $this->updateSession();
       return array(true, $constants["BE_LEKTOR_UPDATE_SUCCESSFUL"]);
@@ -363,18 +361,11 @@ class User extends DB {
     return true;
   }
 
-    /**
-     * Lektor jogosultságának beállítása
-     * @param $lektor
-     * @return mixed
-     */
-
-  public function updateLektorRole($lektor){
+  public function updateLektorRole(){
       global $constants;
-      $lektor->role = $lektor->roles->getRoleId($constants["ROLE_LEKTOR"]);
-      $sql = replaceValues($this->updateLektorRole, $lektor->toArray());
-      $this->query($sql)->getResult();
-      return $lektor;
+      $this->role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
+      $sql = replaceValues($this->updateLektorRole, array("role" => $this->role, "id" => $this->id));
+      return $this->query($sql)->getResult();
   }
 
 
