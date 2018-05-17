@@ -9,6 +9,8 @@ class Keyword extends DB {
   private $selectKeywordsSQL = "SELECT * FROM kulcsszo WHERE name = '{{name}}' AND nyelv = {{nyelv}}";
   private $insertKeywordsSQL = "INSERT INTO kulcsszo (name, nyelv) VALUES ('{{name}}', {{nyelv}}) RETURNING id INTO :id_out";
 
+  private $searchKeywords = "SELECT id FROM kulcsszo WHERE name LIKE '%{{name}}%' AND nyelv = {{nyelv}}";
+
   /**
    * Keyword constructor.
    * @param $lang
@@ -32,5 +34,22 @@ class Keyword extends DB {
     }
     $sql = replaceValues($this->insertKeywordsSQL, array("name" => $keyword, "nyelv" => $nyelv));
     return $this->query($sql)->getId();
+  }
+
+  /**
+   * @param $keywords
+   * @param $nyelv
+   * @return array
+   */
+  public function searchKeywords($keywords, $nyelv) {
+    $ids = [];
+    foreach ($keywords as $keyword) {
+      $sql = replaceValues($this->searchKeywords, array("name" => $keyword, "nyelv" => $nyelv));
+      $data = $this->query($sql)->getFetchedResult();
+      foreach ($data as $row) {
+        array_push($ids, $row["id"]);
+      }
+    }
+    return $ids;
   }
 }
