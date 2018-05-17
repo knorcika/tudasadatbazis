@@ -42,7 +42,7 @@ class DB {
 
   public function getFetchedResult() {
     $arr = Array();
-    while ($row = oci_fetch_array($this->result, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    while ($row = oci_fetch_array($this->result, OCI_ASSOC + OCI_RETURN_NULLS + OCI_RETURN_LOBS)) {
       $arrRow = Array();
       foreach ($row as $key => $val) {
         $arrRow[strtolower($key)] = $val;

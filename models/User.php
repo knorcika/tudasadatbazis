@@ -395,7 +395,7 @@ class User extends DB {
 
   public function getAllLektors($nyelvid){
       global $constants;
-      $role = $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
+    $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
       $sql = replaceValues($this->getAllLektorsSQL, array("role" => $role, "id" => $nyelvid));
       return $this->query($sql)->getResult();
   }

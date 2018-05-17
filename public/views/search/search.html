@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <h3>{{ARTICLE_SEARCH}}</h3>
+            <form method="post">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="keywords" name="keywords" value="{{keywords}}"
+                           placeholder="{{NEW_ARTICLE_KEYWORDS}}" aria-label="{{NEW_ARTICLE_KEYWORDS}}"
+                           aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="search" name="search">
+                            {{ARTICLE_SEARCH}}
+                        </button>
+                    </div>
+                </div>
+                <div id="accordion" role="tablist" aria-multiselectable="true">
+                    {{categories}}
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-9">
+            {{articles}}
+        </div>
+    </div>
+</div>

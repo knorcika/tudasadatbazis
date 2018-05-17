@@ -6,13 +6,13 @@ require_once BASE_DIR . "/models/Category.php";
 require_once BASE_DIR . "/models/Topic.php";
 require_once BASE_DIR . "/models/Article.php";
 
-class NewArticle {
+class Search {
   private $page = "";
   private $user;
   private $lang;
 
   /**
-   * NewArticle constructor.
+   * Search constructor.
    * @param $page
    * @param $user
    * @param $lang
@@ -27,29 +27,20 @@ class NewArticle {
     global $_POST, $constants;
     $message = "";
     $data = array(
-      "cim" => "",
-      "text" => "",
       "keywords" => ""
     );
-    if (isset($_POST['new_article'])) {
-      $user = $this->user->toArray();
+    $article = new Article();
+    if (isset($_POST['search']) && (isset($_POST["keywords"]) || isset($_POST["temakorok"]))) {
       $data = $_POST;
-      $data["felhasznalo"] = $user["id"];
-      $data["nyelv"] = $this->lang;
-      $article = new Article();
-      if ($article->insertArticle($data)) {
-        $data = array(
-          "cim" => "",
-          "text" => "",
-          "keywords" => ""
-        );
-        $message = $constants["NEW_ARTICLE_SUCCESS"];
-      }
     }
+    $keywords = isset($_POST["keywords"]) ? $_POST["keywords"] : "";
+    $temakorok = isset($_POST["temakorok"]) ? $_POST["temakorok"] : array();
+    $articles = $article->search($keywords, $this->lang, $temakorok);
 
     $data["categories"] = $this->getCategories();
+    $data["articles"] = $this->getArticles($articles);
     $data["message"] = $message;
-    $view = getView('new_article/new_article.html');
+    $view = getView('search/search.html');
     $view = replaceValues($view, $data);
     return $view;
   }
@@ -83,6 +74,16 @@ class NewArticle {
       );
       $topicView = replaceValues($view, $data);
       $result .= $topicView . PHP_EOL;
+    }
+    return $result;
+  }
+
+  private function getArticles($articles) {
+    $result = "";
+    $view = getView('article/article.html');
+    foreach ($articles as $article) {
+      $articleView = replaceValues($view, $article);
+      $result .= $articleView . PHP_EOL;
     }
     return $result;
   }

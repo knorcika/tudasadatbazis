@@ -24,6 +24,10 @@ class Article extends DB {
 
   private $updateLektorIdSQL = "UPDATE cikk SET lektor = {{lektorId}} WHERE id = {{id}}";
 
+  private $searchArticleSQL = "SELECT * FROM cikk INNER JOIN cikkkulcsszo ON cikk.id = cikkkulcsszo.cikk
+  INNER JOIN cikktemakor ON cikk.id = cikktemakor.cikk
+  WHERE cikk.status = '{{status}}'";
+
   public function __construct() {
     parent::__construct();
   }
@@ -134,5 +138,42 @@ class Article extends DB {
       }
     }
     return true;
+  }
+
+  /**
+   * @param $keyword
+   * @param $nyelvid
+   * @param $topics
+   * @return array
+   */
+  public function search($keyword, $nyelvid, $topics) {
+    global $constants;
+    $sql = replaceValues($this->searchArticleSQL, array("status" => $constants["ARTICLE_APPROVED"]));
+    if ($keyword) {
+      $keywordModel = new Keyword();
+      $keywords = strtolower($keyword);
+      $keywords = explode(" ", $keywords);
+      $ids = $keywordModel->searchKeywords($keywords, $nyelvid);
+      if (count($ids)) {
+        $sqlQuery = " AND cikkkulcsszo.kulcsszo IN ({{keywordids}})";
+        $ids = implode(", ", $ids);
+        $sql .= replaceValues($sqlQuery, array("keywordids" => $ids));
+      }
+    }
+
+    if (count($topics)) {
+      $sqlQuery = " AND cikktemakor.temakor IN ({{temakorids}})";
+      $temakorids = implode(", ", $topics);
+      $sql .= replaceValues($sqlQuery, array("temakorids" => $temakorids));
+    }
+    $sql .= " ORDER BY id DESC";
+    $data = $this->query($sql)->getFetchedResult();
+    $res = array();
+    foreach ($data as $row) {
+      if (!isset($res[$row["id"]])) {
+        $res[$row["id"]] = $row;
+      }
+    }
+    return $res;
   }
 }

@@ -11,16 +11,18 @@ require_once BASE_DIR . '/controllers/Logout.php';
 require_once BASE_DIR . '/controllers/BeLektor.php';
 require_once BASE_DIR . '/controllers/AdminLektorJelentkezes.php';
 require_once BASE_DIR . '/controllers/NewArticle.php';
+require_once BASE_DIR . '/controllers/Search.php';
 
 $page = "index";
 $body = "";
 $languages = new Lang();
 $lang = $languages->getDefaultLanguage();
-if (isset($_GET["page"])) $page = $_GET["page"];
+if (isset($_GET["page"]) && $_GET["page"]) $page = $_GET["page"];
 if (isset($_GET["lang"])) $lang = $_GET["lang"];
 $user = new User(array());
 
 $router = array(
+  "index" => "Search",
   "register" => "Register",
   "login" => "Login",
   "logout" => "Logout",

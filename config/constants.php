@@ -58,3 +58,5 @@ $constants["LEKTOR_JELENTKEZES"] = "Jelentkezem";
 
 $constants["ADMIN_LEKTOR_JELENTKEZES"] = "Jelentkezett lektorok";
 $constants["ADMIN_LEKTOR_JELENTKEZES_ELFOGAD"] = "Elfogadás";
+
+$constants["ARTICLE_SEARCH"] = "Keresés";
