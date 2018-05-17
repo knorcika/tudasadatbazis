@@ -35,7 +35,14 @@ class User extends DB {
   "SET tud_fokozat = '{{tud_fokozat}}', intezet = '{{intezet}}', szakterulet = '{{szakterulet}}' " .
   "WHERE felhasznalo = {{id}}";
   private $deleteNyelv = "DELETE FROM lektornyelv WHERE lektor = {{lektorid}}";
+
   private $updateLektorRole = "UPDATE felhasznalo SET role = {{role}} WHERE felhasznalo = {{id}}";
+
+  private $getSignedLectorsSQL = "SELECT felhasznalo.id, felhasznalo.name, felhasznalo.email, 
+  lektor.tud_fokozat, lektor.intezet, lektor.szakterulet, lektor.id AS lektorid, lektornyelv.nyelv, lektornyelv.szint
+  FROM felhasznalo INNER JOIN lektor ON lektor.felhasznalo = felhasznalo.id INNER JOIN lektornyelv ON lektornyelv.lektor = lektor.id
+  WHERE felhasznalo.role = {{role}}";
+
 
   /**
    * User constructor.
@@ -264,7 +271,6 @@ class User extends DB {
    * @return array
    */
   public function insertLektor($lektor) {
-    $this->getLektorData();
     global $constants;
     if (!$this->validateLektorFields($lektor)) {
       return array(false, $constants["BE_LEKTOR_MISSING_FIELD"]);
@@ -384,5 +390,32 @@ class User extends DB {
     unset($user["pass"]);
     $user["logged_in"] = true;
     $_SESSION['login'] = $user;
+  }
+
+  /**
+   * Lekérdezi azokat a felhasználókat akik lektornak jelentkeztek
+   * @return array
+   */
+  public function getSignedLectors() {
+    global $constants;
+    $sql = replaceValues($this->getSignedLectorsSQL, array("role" => $this->roles->getRoleId($constants["ROLE_USER"])));
+    $data = $this->query($sql)->getFetchedResult();
+    $result = array();
+    foreach ($data as $row) {
+      if (!isset($result[$row["id"]])) {
+        $result[$row["id"]] = array();
+      }
+      foreach ($row as $key => $val) {
+        if ($key !== "nyelv" && $key !== "szint") {
+          $result[$row["id"]][$key] = $val;
+        }
+      }
+
+      if (!isset($result[$row["id"]]["nyelvek"])) {
+        $result[$row["id"]]["nyelvek"] = array();
+      }
+      $result[$row["id"]]["nyelvek"][$row["nyelv"]] = $row["szint"];
+    }
+    return $result;
   }
 }

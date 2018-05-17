@@ -37,6 +37,11 @@ $constants["REGISTER_PASSWORD2"] = "Jelszó mégegyszer";
 $constants["NEW_ARTICLE"] = "Új cikk létrehozása";
 $constants["NEW_ARTICLE_SEND"] = "Elküld";
 $constants["NEW_ARTICLE_TITLE"] = "Cím";
+$constants["NEW_ARTICLE_TEXT"] = "Szöveg";
+$constants["NEW_ARTICLE_LANGUAGE"] = "Nyelv";
+$constants["NEW_ARTICLE_KEYWORDS"] = "Kulcsszavak (szóközzel elválasztva)";
+$constants["NEW_ARTICLE_TOPICS"] = "Témakörök";
+$constants["NEW_ARTICLE_SUCCESS"] = "Sikeres cikk feltöltés!";
 
 $constants["BE_LEKTOR"] = "Jelentkezz lektornak";
 $constants["BE_LEKTOR_MISSING_FIELD"] = "A lektor adatok kitöltése kötelező!";
@@ -51,3 +56,5 @@ $constants["LEKTOR_NYELVEK"] = "Nyelvek";
 $constants["LEKTOR_NYELVEK_SZINT"] = "Szint";
 $constants["LEKTOR_JELENTKEZES"] = "Jelentkezem";
 
+$constants["ADMIN_LEKTOR_JELENTKEZES"] = "Jelentkezett lektorok";
+$constants["ADMIN_LEKTOR_JELENTKEZES_ELFOGAD"] = "Elfogadás";
