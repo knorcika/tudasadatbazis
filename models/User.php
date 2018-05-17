@@ -361,10 +361,16 @@ class User extends DB {
     return true;
   }
 
-  public function updateLektorRole(){
+    /**
+     * adott felhasz
+     * @param $id
+     * @return mixed
+     */
+
+  public function updateLektorRole($id){
       global $constants;
-      $this->role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
-      $sql = replaceValues($this->updateLektorRole, array("role" => $this->role, "id" => $this->id));
+      $role = $this->roles->getRoleId($constants["ROLE_LEKTOR"]);
+      $sql = replaceValues($this->updateLektorRole, array("role" => $role, "id" => $id));
       return $this->query($sql)->getResult();
   }
 

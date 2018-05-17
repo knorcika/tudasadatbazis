@@ -31,7 +31,6 @@ class BeLektor {
       $res = $this->user->insertLektor($_POST);
       $message = $res[1];
     }
-    $this->user->updateLektorRole();
     $data = $this->user->toArray();
     $data["lektornyelvek"] = $this->getLangs();
     $view = getView('lektor/belektor.html');
